@@ -1,0 +1,22 @@
+\begin{tikzpicture}[scale=0.55]
+%Style macros
+\tikzset{square/.style={black, thick}}
+
+%Macros for graph parameters (length/height/radii)
+\pgfmathsetmacro{\length}{6}
+\pgfmathsetmacro{\height}{4}
+\pgfmathsetmacro{\x}{0}
+\pgfmathsetmacro{\y}{0}
+
+%%% MAIN CODE %%%
+%Big square, mechanism
+\draw[square] (\x, \y) rectangle (\x + \length,\y + \height) node[xshift=-0.5cm, yshift=-0.2cm]{$\Mech$};
+
+%Small square, algo
+\draw[square] (\x+0.4*\length, \y+ 0.4*\height) rectangle (0.8*\length,0.8*\height) node[xshift=-0.3cm, yshift=	-0.15cm]{$\Algo$};
+	
+\draw[->] (\x+\length,0.5*\y+0.5*\height) -- (\x+\length + 1.5, 0.5*\y + 0.5*\height) node[text width=2.3cm, xshift=1.3cm] {Allocation $\Algo'$ Payment $\Pay$};
+
+\draw[->] (\x-1.5, 0.5*\y+0.5*\height) -- (\x, 0.5*\y + 0.5*\height) node[xshift=-2cm, yshift=0.1cm, text width = 2cm] { $\v': $ Values submitted };
+
+\end{tikzpicture}

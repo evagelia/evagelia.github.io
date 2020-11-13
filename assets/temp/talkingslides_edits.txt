@@ -1,0 +1,333 @@
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+1
+Hi everyone, I am Evangelia Gergatsouli and I am a PhD student at UW Madison.
+I will talk to you today about "The Complexity of Black-Box Mechanism Design
+with Priors" This is joint work with Brendan Lucier from Microsoft Research and
+my advisor Christos Tzamos.
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+2
+I will begin the talk with a description of black box mechanism design and will
+go over cases where it is known to be possible and cases when it is not from
+prior work.  Then, I will go over our main results in this work that shed light
+to the complexity of mechanism design with priors.
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+3
+Lets start with a typical instance of a mechanism design problem: a
+combinatorial auction. In this setting, we want to allocate a number of items
+to n agents. Every agent i has a private valuation function v_i that tells us
+his value for every subset of items. We ask every agent to reveal this function
+to us but they may lie reporting a potentially different function v'_i.
+
+We want given the reports to assign a subset of the items to every agent in
+order to maximize the welfare (sum of values of agents)
+
+However, not all allocations are feasible. We assume there is an underlying
+feasibility constraint, which could be, for example, that every item is
+allocated at most once or that no agent can get more than 2 items (---change
+slide with infeasible allocation here---) 
+
+Thus, given the reports and the feasibility constraints our goal is to decide
+which item to give to which agent, subject to the feasibility constraints. But
+in addition we want to figure out appropriate charges to every agent in order
+to incentivize them to be truthful.
+
+The allocation rule together with the payment function forms a mechanism.
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+4
+Underneath this mechanism design problem from the previous slide, lies a purely
+algorithmic problem: find an algorithm to feasibly allocate the items while
+maximizing social welfare.
+
+Even if we could solve this allocation problem efficiently, is it possible to
+convert this solution to a truthful mechanism.  In particular, is the problem
+of designing a truthful mechanism harder than the underlying algorithmic
+problem?
+
+One way of answering this would be to obtain black box reduction from mechanism
+design to algorithm design, where without looking at the internals of the
+optimization problem that the algorithm solves, we are still able to obtain a
+truthful mechanism that has comparable guarantees. 
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+5
+More generally, we have an algorithm that returns
+feasible allocations and has some welfare guarantee.
+
+We want to implement a mechanism, potentially changing this initial
+allocation to A', that satisfies these three properties: we want the new
+allocation to be feasible, the mechanism to be truthful, and to have comparable
+performance to the initial algorithm A.
+
+So the question is can we implement this mechanism? And how easy it is to do
+this.
+
+--->
+You can think of it as this box: we have the algo A, but need to find the
+bigger box M that accepts the agents reports and decides on an allocation
+and and payments by querying possibly multiple times the algorithm.
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+6
+So, are such black-box reductions possible?  If we are guaranteed that the
+algorithm maximizes welfare exactly, it is always possible convert the
+algorithm into a feasible mechanism by simply charging appropriate payments.
+This generic black box reduction is the VCG mechanism that most of you are
+familiar with.
+
+So what happens when A maximizes welfare only approximately? The VCG reduction
+does not apply in this case and results in non-truthful mechanisms. Even worse,
+there may not even exist prices that make the allocations given by the
+algorithm truthful.
+
+To address this problem, we will need to change the allocations in some way but
+still preserve the algorithm's welfare.
+
+There are several different flavors to the problem.  For example we may
+consider Average Performance when values are drawn from some distribution
+instead of worst case performance.
+
+Or maybe consider some different notion of truthfulness, such as Bayesian
+Incentive Compatibility, so require the mechanism to be truthful in expectation
+over other agents reports, instead of always truthful.
+
+Or, in terms of the guarantee, require the mechanism to achieve the algorithm's
+welfare approximately instead of exactly.
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+
+7
+The flavours of the problem we mentioned earlier, are already extensively
+studied.  Lets see now some of these previous results for welfare maximization.
+
+One of the early results in Black-Box Mechanism design showed that without
+distributional assumptions, transforming an algorithm into a dsic mechanism
+while preserving the welfare in the worst case approximation is not possible.
+This is true even in single parameter settings where every agent has just a
+single value for obtaining an item.
+
+However in Bayesian settings - when values are drawn from some known
+distribution- prior work has shown that, even for multi parameter settings,
+there exists an efficient black box transformation to BIC mechanisms that
+approximately preserves the expected welfare.
+
+This was shown in series of results where initially it was shown only for
+single-parameter settings, then extended to multi-parameter settings under
+epsilon-BIC implementations and more recently this was extended into exact BIC
+implementation in general multi param settings.
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+8
+So the picture looks like this: in prior free settings, we cannot transform an
+algorithm into a dsic mechanism while preserving the welfare in worst case.  In
+Bayesian settings, on the other hand, we can find such a reduction even in the
+multi-parameter setting
+
+so it seems that things are easier in the Bayesian settings. There are however
+some questions to be answered in Bayesian settings:
+
+First of all, we used the weaker notion of truthfulness, namely Bayesian
+Incentive Compatibility, so the question is can we strengthen this to maybe
+DSIC?
+
+Secndly, all the results that we mentioned in the previous slide, run in time
+polynomial on the typespace of the agents the type space is all the different
+input profiles for the agents (or alternatively the support of the distribution
+D) Now the problem is that this can actually be exponential: for example even
+for single additive agent with independent types.
+
+So the second question is: can we avoid this dependence on typespace and still
+get a BIC reduction?
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+9
+Our main results answer these two questions. The answers to both turn out to be
+negative.
+
+More specifically, if we strengthen the BIC requirement to MIDR, we cannot find
+a good reduction, And by "good redyction" I mean that any mechanism will
+degrade the welfare by a polynomial factor even for single parameter settings.
+This MIDR condition is an even stronger truthfulness notion than DSIC. You can
+think of BIC as the less strong, then comes DSIC and then MIDR is the
+stringest. We will talk about this later in a while.
+
+As for the secodn question, if we want to avoid this runtime dependence on
+typespace, again we cannot find a good reduction even for a single additive
+agent over independent items.
+
+In this talk: we'll focus in the first result, and I'll give a very brief
+overview of the second towards the end.
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+10
+Lets talk now about the setting and the lower bound construction for the MIDR
+reduction.
+
+Remember that our objective is still to maximize the welfare, and we are in the
+single parameter setting with n agents, so every agent has a single value. The
+typespace and outcome space are binary vectors of size n.
+
+As we said before, the truthfulness requirement is MIDR, which formally means
+for every two vectors v and v', the value of the agent will be the best when he
+reports truthfully.  You can think of this as the agent benefiting from
+reporting truthfully when payments are 0. This is essentially the same as
+finding the best outcome in the allocation's range.
+
+The main theorem says that any MIDR black box transformation with sub
+exponential query complexity we can find an algorithm and a distribution that
+will cause the mechanism to degrade the welfare by a polynomial factor. 
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+11 
+So remember the theorem statement, we need to find a "bad" distribution and an
+algorithm that will cause the mechanism to degrade welfare.
+
+Initially, for the distribution of inputs, we let every x_i to be 1 with
+probability roughly 1/sqrt(n).  Then we define this family of algorithms using
+two uniformly random sets of size roughly square root of n, that have a
+nontrivial intersection.
+
+This algorithm now, (which is essentially a family of algorithms, parameterized
+by the random sets S and T) will either be the identity function, or return 0,
+depending on the input.Let's see the cases that each happens.
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+12
+. When the input x is too large, and by too large I mean more than sqrt(n),
+then the algorithm will return 0
+. On the other hand, when the input is less than sqrt(n), and has no
+intersection with the sets S and T, the algorithm is just the identity
+function, and will return whatever was given as input.
+
+this is depicted in the figures below, the red x means that the algorithm
+returns 0, and the green tick means that we will return x.
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+13
+Lets see now what happens when the inout is not too large, and also intersects
+S and T.
+
+Then we always return x except when x has a large intersection with T and a
+small intersection with  the set S.
+
+For ecample in the figures below, in the first case, x intersection T is large,
+but x intersection S is small, so we return 0.
+
+While in the last image, x intersection T may be large, but since x
+intersection S is also large, then we are ok, and we return x
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+14
+Now that we have the construction and the distribution, we need to prove that
+the welfare of the mechanism degrades by polynomially.
+
+To do this, initially we show that the welfare of the initial allocation A is
+large (at least Omega(sqrt(n))) and then that he mechanism has polynomially
+worse welfare (in the order of n^{1/4} Now you can see that the combinatin of
+these two lemmas gives us the theorem. 
+
+So the idea for the first lemma is that teh algorithm will almost always return
+x, and then the result follows from concentration using the construction of the
+sets S and T and the distribution D.
+
+The more technical part is the second lemma, so showing that the mechanism will
+always degrade the welfare.
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+15	
+
+We show that the mechanism's welfare is low in three steps:
+
+1...initially, we show that the set T will give bad welfare. For the idea of
+this proof, first observe that teh algorithm gives 0 when we give T as input.
+So the problem now is that the mechanism cannot find the set S using only
+subexponential amount of samples, and therefore it cannot output high welfare
+for T.
+
+You can think of S as the good set, that gives us high welfare, and T as the
+bad set.
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+16
+In the second step, we show that the mechanism will return low welfare for
+input S. This follows from the MIDR condition: S cannot return an outcome with
+high welfare for T. The problem though is that S cannot find this set T, and
+therefore it must reduce the welfare throughout.
+
+--> In the final step then, we show that M will give low welfare on any input
+x. The idea for this is that we cannot distinguish between the two cases shown
+in the image: so we cannot know if the x is just some random x without an
+intersection with S or if it has an intersection with S.
+
+This is the high level idea of the proof of the first result
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+17
+Now for a small overview of the second result. In this case we have a single
+additive agent and n items.
+
+In this setting, the main theorem says that for any DSIC black box
+transformation we can find again a distribution and an algorithm that will
+degrade the mechanisms welfare polynomially.
+
+The proof follows similarly to the MIDR reduction we saw before, BUT instead of
+the MIDR condition, we use a characterisation of DsIC allocation rules, first
+introduced by Hartline, Kleinberg and Malekian.
+
+Note here, that in the setting of single agent, the DSIC condition is the same
+as BIC, which means that the theorem implies that this is impossible for any
+BIC transformation.
+--------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+18
+Finally, to conclude, we talked about reducing mechanism design to algorithm
+design, and we saw that the existing Black-box reductions are for BIC
+mechanisms and require polynomial dependence on typespace.
+
+Our results showed that these two requirements are unavoidable, and
+specifically when strengthening BIC to MIDR and when removing the polynomial
+dependence on the typespace, we cannot find a reduction without degrading the
+welfare by a polynomial facor.
+
+One interesting open problem is to strengthen BIC to DSIC instead of MIDR, and
+try to find a reduction preserving expected welfare.
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+

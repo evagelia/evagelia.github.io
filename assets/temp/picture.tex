@@ -1,0 +1,63 @@
+\begin{tikzpicture}
+
+%Style macros
+\tikzset{ST/.style={black, thick}}
+
+%Circle macro, for rx and ry diameters
+\tikzset{rx/.style={x radius=#1},ry/.style={y radius=#1}}
+
+\pgfmathsetmacro{\rx}{1.7}
+\pgfmathsetmacro{\ry}{1.5}
+\pgfmathsetmacro{\x}{2.6}
+\pgfmathsetmacro{\y}{2}
+\pgfmathsetmacro{\step}{0.7}
+
+%%% MAIN CODE %%%
+
+\node[] at (0, 2.2*\y) {Welfare maximization};
+
+%NON-BAYESIAN ELLIPSE
+\draw[ST] (-\x,\y) circle [rx=\rx cm, ry= \ry cm];
+\node[] at (-\x,\y+\ry-\step) {\underline{Prior-Free}} ;
+\node[] at (-\x,\y+\ry-2.2*\step) {Single-parameter \textcolor{red}{\xmark} } ;
+\node[] at (-\x,\y+\ry-3*\step) {Multi-parameter \textcolor{red}{\xmark} } ;
+
+%Assumptions
+\node[] (dsic) at (-\x - \rx - 0.5,\y - 0.6*\ry) {\emph{DSIC}};
+\draw[-] (dsic) -- (-\x-\rx, \y);
+
+%BAYESIAN ELLIPSE
+\draw[ST] (\x,2) circle [rx=\rx cm, ry= \ry cm];
+\node[] at (\x,\y+\ry-\step) {\underline{Bayesian}} ;
+\node[] at (\x,\y+\ry-2.2*\step) {Single-parameter \textcolor{green}{\checkmark} };
+\node[ ] at (\x,\y+\ry-3*\step) {Multi-parameter \textcolor{green}{\checkmark} } ;
+
+%Assumptions
+\node[] (bic) at (\x + \rx + 0.9,\y -0.6*\ry + 0.5) {\emph{BIC}} ;
+\node[ text width=2.1cm ] (poly) at (\x + \rx + 0.5,\y - 0.6*\ry - 1) {\emph{Runtime polynomial on typespace}};
+
+\draw[-] (bic) -- (\x+\rx, \y);
+\draw[-] (poly) -- (\x+\rx, \y);
+
+\pgfmathsetmacro{\bx}{0}
+\pgfmathsetmacro{\by}{-1}
+\pgfmathsetmacro{\bry}{0.8*\ry}
+\pgfmathsetmacro{\brx}{0.8*\rx}
+
+%In between
+\onslide<2>{
+		\node at (0,-1) {
+    {\begin{varwidth}{\linewidth}
+	\begin{itemize}
+		\item   \text{Can we strengthen the BIC incentive constraint?} 
+			\item \text{Can we avoid polynomial dependence on typespace?}\\ 
+        \text{\emph{Example}: single additive agent, with independent values over}\\ 
+        \text{each
+	        item, typespace can be exponential.}
+    \end{itemize}
+	\end{varwidth}
+	}
+	};
+}
+
+\end{tikzpicture}

@@ -1,0 +1,41 @@
+\begin{tikzpicture}[scale=0.70]
+
+\tikzset{VM/.style={shape=rectangle}}
+\tikzset{Client/.style={shape=circle}}
+
+\node[Client]  (client1) at (3,3) {\includegraphics[width=0.9cm]{bob.png}} ;
+\node[Client]  (client2) at (7,3) {\includegraphics[width=1.3cm]{patrick.png}} ;
+
+\foreach \i in {1,2,3,4}{
+		\node[VM] (vm\i) at (2*\i,-0.5) {\includegraphics[width=0.8cm]{patty.jpg}};
+	\node[] at (2*\i,-1) {};%$\text{Item}_\i$};
+}
+
+%Draw fesible allocation
+\onslide<2>{
+	\draw[->, thick] (client1) -- (vm1); 
+	\draw[->, thick] (client2) -- (vm2); 	
+	\draw[->, thick] (client2) -- (vm3); 	
+	\draw[->, thick] (client2) -- (vm4); 	
+ };
+
+\onslide<3> {
+	\draw[->, thick] (client1) -- (vm1); 
+	\draw[->, thick, red] (client2) -- (vm2); 	
+	\draw[->, thick, red] (client2) -- (vm3); 	
+	\draw[->, thick, red] (client2) -- (vm4); 	
+};
+
+\onslide<4,5> {
+	\draw[->, thick] (client1) -- (vm1); 
+	\draw[->, thick] (client1) -- (vm2); 	
+	\draw[->, thick] (client2) -- (vm3); 	
+	\draw[->, thick] (client2) -- (vm4); 	
+}
+
+\onslide<5> {
+	\node[] at (1.5,3) {$\$42$};
+	\node[] at (8.5,3) {$\$13$};
+ };
+
+\end{tikzpicture}

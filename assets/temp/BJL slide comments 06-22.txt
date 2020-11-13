@@ -1,0 +1,121 @@
+OK Slide 1: 
+OK - Space after "EC,"
+OK
+OK Slide 2:
+OK - looks good
+OK
+OK Slide 3:
+OK - Title: How about "Mechanism Design for Welfare"
+OK
+OK - Some suggestions for the text:
+OK - Bullet 2: "Agent i has private value v_i(S) for set S of items"
+OK - I'd leave out bullet 3 (can define v' as part of the mechanism, see below)
+OK - Bullet 4: Feasibility constraint F (e.g., at most 2 items per agent)
+OK - Bullet 5: Goal: allocate items to maximize welfare
+OK
+OK Instead of "Decide:", how about: 
+OK Mechanism M: Given reported values v', decide:
+OK Allocation rule A: who gets which items
+OK Payment rule P: who pays what
+
+OK Slide 4:
+OK Algorithmic Problem: Find allocation rule A that (approximately) maximizes welfare
+OK Try to get "Is designing..." onto one line.  Maybe omit "M", or shorten mechanism to "mech.", etc.
+OK Now that I see it, I think we should skip the additive material here.  It makes it seem like we're restricting to this setting.  I'd consider 
+OK removing "Simple setting:" and then everything below it, and just having this be a slide with 3 lines.
+
+
+OK Slide 5:
+OK Title: Black-Box Mechanism Design
+OK Left-hand side is great.  Maybe change "performance guarantee" to "welfare guarantee."  For right-hand side, try to mirror left as much as 
+OK possible.  E.g.,
+OK We implement M(A',P) that
+OK - Returns feasible allocations
+OK - Has comparable welfare to A
+OK - Is Incentive Compatible (should be vague here, as we want this framework to capture BIC as well)
+
+Maybe have the figure come in before red text?  Depends on how you want to present the slide.
+
+
+OK 	Slide 6:
+OK - If A maximizes welfare (remove "is")
+OK - Instead of "Prices that make A be DSIC may not exist", how about "There may not exist prices P such that M(A,P) is truthful"
+OK - New bullet below that: "Goal: find a modified allocation A' and truthful payments?"
+
+OK Slide 7: multi-parameter (hyphen), comma in last bullet
+
+Slide 8: need more explanation about 'runtime polynomial on typespace.'  
+
+Maybe instead title the slide: "What's left to do?", possibly omit the figures, and have something like the following:
+
+- The picture so far:
+	- DSIC reduction, worst-case performance, single-parameter [x]
+	-	 BIC reduction, expected performance, multi-parameter [check]
+
+- Some questions still remain:
+
+	1. Can we find a DSIC reduction that preserves expected welfare, even for single-parameter agents?
+
+	2. The known BIC reductions have runtime polynomial in the typespace size.  
+	Example: single additive agent, with independent values over each item, runtime is exponential.  
+	Can we avoid this dependence on typespace, and get a BIC reduction that runs in time Poly(n,m)?
+
+
+OK Slide 9:
+OK - Try to make the slide more self-contained.  E.g.:
+OK - Is there a MIDR reduction that preserves expected welfare?
+OK	-> (red x)
+OK	-> Explain: MIDR is stronger than DSIC
+OK - Is there a BIC reduction without runtime dependence on typespace?
+OK	-> (red x) 
+OK Instead of "This talk:" Maybe "Up next: intuition for first result"
+
+
+Slide 10: 
+OK - Mention that this is for n agents, single-parameter.  I.e., to fit with the way the result was described in the previous slide.
+- Maybe give a hint about the polynomial in (poly(n)) ?
+
+
+OK Slides 11/12: it would be good to have the pictures to refer to while going through the text.  Maybe describe the argument in words, with the 
+OK appropriate figures alongside?  Something like the following: OK	- input distribution: x_i = 1 w.p. 1/O(sqrt{n})
+OK	- As long as |x| isn't much bigger than sqrt{n}, A_{ST}(x) = x.  
+OK	- Exception: if x has large intersection with hidden set T then return 0, 
+OK	- unless x also has a large intersection with hidden set S.
+OK - I wouldn't bother introducing notation 'N', just use sqrt{n}.
+
+
+OK Slide 13: 
+OK - Again, I'd use sqrt{n} instead of N.
+OK - Lemma 1 Proof idea: A(x) = x almost always.
+OK - Lemma 2: I'd just say Welfare of M is <= O(n^{1/4})
+
+
+OK Slide 14: 
+OK - For step 1, I'd write the idea this way:
+OK "A_{ST}(T) = 0, and M cannot find set S with subexponentially many samples, so it cannot find an output with high welfare for T."
+OK - QED symbol shouldn't be there
+
+
+Slide 15: 
+OK - In step 2, "Because of MIDR, M_A(S) can't return an outcome with high welfare for T. However..."
+OK - For step 3, maybe show (b) and (d) instead of (c) and (d)?
+
+
+OK Slide 16: I wouldn't mention the new type space, it's a bit of a detail. 
+OK Instead, I'd just mention that it's a single additive agent with n items, and emphasize it's a multi-dimensional type.  Then go directly into the OK statement of Theorem 2.
+OK Below the theorem statement, add a note that because it's a single agent, DSIC = BIC, so the result implies that a BIC reduction requires 
+OK exponential time.
+OK Again, wouldn't bother mentioning the type space when discussing the proof.  Instead I'd just say something like:
+OK "Instead of MIDR condition, uses a characterization of DSIC allocation rules due to [Hartline, Kleinberg, Malekian 2011]"
+
+
+OK Slide 17: Statements like "reductions are not possible without priors" are too strong -- we don't know this for sure.
+OK Maybe instead say something like:
+OK - Black-box reductions: reducing mechanism design to algorithm design.
+OK - Existing black-box reductions are for BIC mechanisms, and have polynomial dependence on typespace
+
+OK We showed two negative results:
+OK - First bullet fine
+OK - Second bullet: I'd say "Remove" instead of "Change"
+
+OK Open problem: can we strengthen BIC to DSIC, while preserving expected welfare?

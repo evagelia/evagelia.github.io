@@ -1,0 +1,24 @@
+\begin{tikzpicture}
+
+\tikzset{VM/.style={shape=rectangle}}
+\tikzset{Client/.style={shape=circle}}
+
+\node[Client]  (client) at (5,3) {\includegraphics[width=0.9cm]{bob.png}} ;
+
+\foreach \i in {1,2,3,4}{
+		\node[VM] (vm\i) at (2*\i,0) {\includegraphics[width=0.7cm]{computer.png}};
+	\node[] at (2*\i,-1) {$v_\i$};
+}
+
+%Draw fesible allocation
+\onslide<2>{
+	\draw[->, thick] (client) -- (vm1); 
+	\draw[->, thick] (client) -- (vm3); 	
+ }
+
+\onslide<3>{
+	\draw[->, thick, red] (client) -- (vm1); 
+	\draw[->, thick, red] (client) -- (vm4); 
+	\node[red] at (2.5,3) {Infeasible!};
+}
+\end{tikzpicture}

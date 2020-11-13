@@ -1,0 +1,289 @@
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+1
+will talk about <title> 
+this is joint work with ...
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+2
+Initially we will see what this bbox mech design means, when it is hard to do
+and when it's not.  Then we'll review some of the previous work and see some
+new results
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+3
+Lets start with a typical instance of mech design: a combinatorial auction. In
+this setting, there is a number of items, and n agents that each of them has a
+private value for each subset of items. These agents will report a value vi',
+possibly different from their true value.
+
+There is also an underlying feasibility constraint.  An example of this is that
+any agent cannot get more than 2 items (---change slide with infeasible allocation
+here---) 
+
+Our goal is to decide two things: first decide which item to give to which
+agent, so an allocation rule, always subject to the feasibility constraint The
+second thing is to decide who pays what for this allocation, so a payment rule
+
+These two together form a mechanism
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+4
+Observe from the previous slide, that there is a purely algorithmic problem:
+find an algorithm to allocate the items while satisfying some performance
+guarantee, for example maximizing welfare
+
+So now, the question that arises is: is designing a truthful mechanism harder
+than this algorithmic problem?
+
+One way of answering this is using black box reductions. so lets see a simple
+setting, to understand what black box reductions are.
+
+Assume that we have a client (a simple additive agent) who wants to buy virtual
+machines from a cloud infrastructure platform. This client has different
+(private) values for each vm that are drawn from some distribution. There are
+however some restrictions on how to give the client different machines, that
+are given to us by -say- the engineering team, as an algorithm that matches the
+client's valuation to a feasible allocation. The objective is now to implement
+a truthful mechanism, using this allocation as a black box, by matching the
+expected welfare of this algorithm.
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+5
+So, more formally, lets say someone gives us an algorithm that just Returns
+feasible allocations and has some performance guarantee.
+
+Then, we want to implement a mechanism, potentially changing this initial
+allocation to A', that satisfies these three properties: we want the new
+allocation to be feasible, the mechanism to be truthful, and to have comparable
+performance to the initial algorithm A.
+
+So the question is can we implement this mechanism? And how easy it is to do
+this.
+
+--->
+You can think of it as this box: we have the algo A, but need to find the
+bigger box M that accepts the agents reports and gives us an allocation
+and payment rules to maximize welfare
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+6
+So, what can we do when the algorithm maximizes social welfare exactly?  --->
+Then we just implement the allocation exactly, and charge suitable payments,
+and this is exactly the VCG mechanism, which was shown to be truthful.
+
+So what happens when A maximizes welfare approximately? Vcg does not work in
+this case, mech is not truthful. And even worse, there may not even exist
+prices that make the mechanism truthful.
+
+To address this problem, we may consider some different approaches to the
+problem.  For example we may consider Average Performance when values are drawn
+from some distribution instead of worst case performance. 
+
+Or maybe consider some different notion of truthfulness, such as Bayesian
+Incentive Compatibility, so require the mechanism to be truthful in expectation
+over other agents reports, instead of always truthful.
+
+Or, in terms of the guarantee, require the mechanism to achieve the algorithm's
+welfare approximately instead of exactly.
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+
+7
+Lets see now some of the previous results, remember that the objective is to
+max welfare
+
+
+in prior free settings it was shown that we cannot find
+a dsic mechanism while preserving the cost in the worst case approximation
+
+However in in Bayesian settings -so when values are drawn from some distribution-
+it was shown that we can find a BIC mechanism, even for multi parameter
+settings, that preserves the expected welfare within a factor of epsilon
+
+This was a series of results, initially it was shown that we can find a BIC
+mechanism for single param settings, then this was extended to approximate BIC
+for multi parameter settings, and finally, a couple of years ago this was
+proven for exact BIC and multi param settings.
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+8
+So the picture looks like this: in prior free settings we can't do much, for
+multi parameter or single param, while in Bayesian settings things are looking
+better. So in the Bayesian setting the results assumed two things. 
+
+The mechanisms were BIC and had runtime that depended polynomially on the
+typespace. So the question is, do we actually need these two constraints or can
+we change them?
+
+So, specifically, the first question is if we can we strengthen the BIC incentive constraint?
+And the second one is: can we avoid this polynomial dependence on typespace?
+The problem with this dependence is that it can actually be exponential, for
+example for a single additive agent, with independent value for each item, the
+typespace can be exponential
+
+So, the general picture is that in prior free settings we have impossibility
+results, but in Bayesian settings we get positive results. The question we are
+trying to answer is what is that makes this hard in one setting, and easy at
+the other.
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+9
+So it turns out that in both cases the answer is negative, so we cannot find a
+good mechanism.
+
+Specifically, if we replace the BIC requirement with MIDR, which is a slightly
+stringer truthfulness notion than DSIC, we cannot find a good mechanism, even
+for single parameter settings.
+
+Similarly, if we want less than polynomial dependence on typespace, again we
+cannot find a good mechanism even for a single additive agent over independent
+items.
+
+When I said we cannot find a good mechanism, I mean that the mechanism will
+degrade the welfare substantially: meaning by a polynomial factor
+
+In this talk: we'll focus in the first result, and give a small overview of the
+second
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+10
+Lets see out setting in more detail. Our objective is to maximize the welfare
+and both the typespace and outcome space are binary vectors of size n
+
+The notion of truthfulness that we want is MIDR, meaning that the agent will
+benefit from reporting truthfully when payments are 0. This is essentially the
+same as finding the best outcome in the allocation's range.
+
+The main theorem says that any MIDR black box transformation with sub
+exponential query complexity we can find an algorithm and a distribution that
+will cause the mechanism to degrade the welfare by a polynomial factor.
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+11 
+To do this, we will construct a family of allocations and a distribution to
+make M degrade the welfare. You can see the high level details of the
+construction here.
+
+Initially, the distribution of inputs is just a Bernoulli, w.p. roughly
+1/sqrt(n). Then we define this family of algorithms using two uniformly random
+sets of size roughly square root of n.
+
+This algorithm now, will be the identify function except in two cases where it
+will return 0: so if the intersection of the input with T is large but the
+intersection of the input with S is small OR if the input size is too large
+THEN the algorithm will return the zero allocation
+
+This parameter N just quantifies what we mean by "large input".
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+12
+lets see what this allocation looks like:
+The red X in the images means that the algorithm returns 0.
+
+In case a x is too large, so the allocation will return 0
+
+in case b the input is small, and does not intersect the hidden sets S and T,
+so the algorithm will return x
+
+In case c the intersection of x with T is large but the intersection with S is
+small, so we return 0
+
+And in the final case, both the intersections with T and S are large, so we are
+ok, and return x
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+13
+In order to prove that the welfare degrades by much, we show that the welfare
+of the initial allocation A is large (at least Omega(N)) and that he mechanism
+M has polynomially worse welfare.  You can see that the combination of these
+lemmas gives us the theorem. 
+
+So the first lemma follows from concentration using the construction of the
+sets S and T and the distribution D.
+
+Now, we will see the proof idea of the second lemma, which is the more
+technical of the two.
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+14
+
+We show that the mechanism's welfare is low in three steps:
+
+1...initially, the set T will give bad welfare. The idea for this is that the
+query on the set T will give 0, and by asking the oracle we cannot find the set
+S that could give something non zero, so the mechanism will not be able to
+return something large.
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+15
+In the second step, we show that the mechanism will return low welfare for
+input S.  This follows from the MIDR condition, and the fact that we cannot
+find the set T, so we are forced to reduce the welfare throughout.
+
+-->
+Finally, the mechanism will give low welfare on any input, because it will not
+be able to decide if x is in the good set S or not.
+
+This concludes the proof of the first result
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+16
+Now for an overview of the second result, in this case we have a single additive
+agent and n items, and the type space has 3 distinct values. 
+
+In this setting, the main theorem says that for any DSIC black box
+transformation we can find again a distribution and an algorithm that will
+degrade the mechanisms welfare polynomially.
+
+The proof follows similarly to the MIDR reduction we saw before, with some slight changes:
+-we change the type space to have 3 values, 
+- and use the characterization of allocation rules given by Hartline, Kleinberg and Malekian
+
+--------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+17
+Finally, to conclude, we saw that Black-box reductions are not possible without
+priors while  Black-Box reductions with priors require BIC and  Polynomial
+dependence on typespace. 
+
+We showed that these two are unavoidable by strengthening the BIC to MIDR and
+changing the polynomial dependence on the typespace. In both cases the
+mechanism degraded the welfare substantially.  One interesting open problem
+that arises is if the BIC constraint can be strengthened to DSIC (instead of
+MIDR)
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+

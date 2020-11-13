@@ -1,0 +1,643 @@
+\documentclass[hyperref={pdfpagelabels=false}]{beamer}
+\usepackage{etex}
+
+%If we want "clean" slides without the "pauses"
+%\documentclass[handout]{beamer}
+
+\mode<presentation>
+\usepackage{lmodern}
+
+\usepackage{thmtools}
+\usepackage{thm-restate}
+
+\usetheme{Malmoe} 
+\definecolor{myBlue}{RGB}{1,69,124}
+\usecolortheme[named=myBlue]{structure}
+\beamertemplatenavigationsymbolsempty % To get rid of nav buttons
+
+\usepackage{array}
+\usepackage{bbm} 					%For nice expected value symbol
+\usepackage{mathtools}			%For xRightarrow
+\usepackage[ruled]{algorithm2e}	%For "algorithm" environment
+\usepackage{bm}					%For bm
+\renewcommand{\thealgocf}{} %no remove number from algorithm caption
+
+\usepackage{tikz}					%Tikzzzzzzzzzzzzzz <3
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{arrows.meta, shapes.geometric, calc, shadows, decorations.pathreplacing} %tikz stuff
+\usepackage{multirow,bigdelim}
+\usepackage{enumerate}
+%%%%%%% New Commands %%%%%%%%
+\newcommand{\lsum}{\displaystyle \sum}		%To display large sum sign
+
+%Proof Idea
+\newenvironment{proofid}{%
+  \renewcommand{\proofname}{Proof Idea}\proof}{\endproof}
+
+%Proof Sketch
+\newenvironment{proofsk}{%
+  \renewcommand{\proofname}{Proof Sketch}\proof}{\endproof}
+
+%To make theorems and lemmas numbered
+% \setbeamertemplate{theorems}[ams style] %This makes Lemma/Theorem etc to appear bold
+ \setbeamertemplate{theorems}[numbered]
+%%-----------------------------------------------------------------------------
+% Fonts
+%%-----------------------------------------------------------------------------
+%\usepackage{fontspec}
+\usepackage{amsthm}
+
+%\setmainfont{CMU Serif}
+%\setsansfont{CMU Serif} 
+%\setmonofont{CMU Serif} 
+
+%%-----------------------------------------------------------------------------
+% Beamer Stuff
+%%-----------------------------------------------------------------------------
+\usepackage{hyperref}
+\usepackage{adjustbox}
+\usepackage{amsfonts,amssymb,wasysym}
+\usepackage[accumulated]{beamerseminar}
+\usepackage{beamertexpower}
+\usepackage{amssymb}%for checkmark in figure
+\usepackage{pifont}%for nice xmark in figure
+
+\renewcommand*\insertshorttitle{\secname}%\hfill%
+
+%%% Parameters %%%
+\newcommand{\authorname}{Evangelia Gergatsouli, Brendan Lucier, Christos Tzamos}
+\newcommand{\mytitle}{The Complexity of Black-Box Mechanism Design with Priors}
+
+\title[]{\mytitle}
+
+\author[E.Gergatsouli, B.Lucier, C.Tzamos]{\emph{Evangelia Gergatsouli}$^1$, Brendan Lucier$^2$, Christos Tzamos$^1$}
+
+\institute{ 
+$^1$University of Wisconsin-Madison\\
+$^2$Microsoft Research\\
+}
+\date{ACAC, Athens, Greece, August 2019}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% MY NEW COMMANDS %%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\footnotesize}{\scriptsize}
+%Add numbering of slides...
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
+%Useful bold not italic values vector
+\newcommand{\refscolorz}{teal} %References color
+\renewcommand{\v}{\text{\textbf{v}}}
+\newcommand{\xmark}{\ding{55}} %needed for figure
+\newcommand{\prob}[2]{\textbf{Pr}_{#1} \lp[ #2 \rp]}
+\newcommand{\poly}{\text{poly}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\ind}[1]{\mathbbm{1}{ \{ #1 \} }}
+
+\newcommand{\mybullet}{$\textcolor{myBlue}{\blacktriangleright}$ } %Bullet same as itemize, for text
+\newcommand{\myspace}{0.5cm}
+\renewcommand{\sp}{\mbox{} \hspace{\myspace}}	%mlkies spacing for prev results slide
+\newcommand{\spitem}{\mbox{} \hspace{1cm}}	%mlkies spacing for prev results slide
+
+\newcommand{\eps}{\varepsilon}
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\lp}{\left}
+\newcommand{\rp}{\right}
+
+\newcommand{\A}{{A}}
+\newcommand{\Wel}{\textsc{Wel}}
+
+\newcommand\Dist{\mathcal{D}}
+\newcommand\Alloc{\mathcal{F}}
+\newcommand\Algo{\mathcal{A}}
+\newcommand\Pay{\mathcal{P}}
+\newcommand\Mech{\mathcal{M}}
+\newcommand\Domain{\mathcal{X}}
+\newcommand\Range{\mathcal{Y}}
+\newcommand\Exp{\mathbb{E}}
+
+\declaretheorem[name=Lemma]{lem}
+
+
+%%TO remove "figure" in figure's captions
+%\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+\setbeamertemplate{headline}{}
+
+\begin{document}
+
+\begin{frame} %title
+\titlepage
+\end{frame}
+
+\begin{frame}
+\tableofcontents
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}
+	\frametitle{Mechanism Design for Welfare}
+	
+	 \begin{table}[H]
+		\begin{tabular}{p{0.5\textwidth}  p{0.4\textwidth} }
+
+	\begin{figure}[!h]
+			\centering
+				\input{mech_fig.tex}
+		\end{figure}
+& 
+ \begin{itemize}
+ 		\item $n$ agents, $m$ items
+		\item Agent $i$ has \emph{private} value $\text{v}_i(S)$ for set $S$ of items
+%		\item Agents report $\text{v}'_i$ 
+		\item Feasibility constraint $\Alloc$ (e.g. at most 2 items per agent)
+		\item Goal: allocate items to maximize welfare
+ \end{itemize}
+			 \end{tabular}
+	 \end{table}
+
+\vspace{-2em}
+Mechanism $\Mech$: Given reported values $\v'$ decide:
+\onslide<2,3,4,5>{
+		\begin{itemize}
+				\item Allocation rule $\Algo$: how to give out items 
+%						(feasible allocation $\Algo$)
+						\onslide<5>{	\item Payment rule $\Pay$: Who pays what}
+			\end{itemize}
+	}
+
+\end{frame}
+
+\begin{frame} 
+	\frametitle{Black-Box Mechanism Design}
+	
+	Algorithmic problem: Find allocation rule $\Algo$ that maximizes welfare\\	
+	Can we turn this into truthful mechanism?\\
+\pause
+	\begin{figure}[!h]
+		\centering
+			\input{bbox.tex}
+	\end{figure}
+	\pause
+	\begin{itemize}
+		\item If $\Algo$ maximizes welfare \emph{exactly} in poly-time\\
+			Implement the allocation of $\Algo$ + charge suitable payments \\
+			$\rightarrow$ VCG is truthful! 
+	{\footnotesize \textcolor{\refscolorz}{[Vickrey 1961, Clarke 1971, Groves	1973]}}
+
+
+
+		\item If $\Algo$ only \emph{approximately} maximizes welfare\\
+				\pause
+				$\rightarrow$ VCG is not truthful! \\
+        $\rightarrow$ There may not exist $\Pay$  such that $\Mech(\Algo,\Pay)$ is truthful.\\
+$\rightarrow $ Goal: find a modified allocation $\Algo'$ and truthful payments?
+	\end{itemize}	
+	
+	Is designing truthful $\Mech$ harder than the algorithmic problem? \\
+	\pause
+			 One possible answer: \textcolor{olive}{Black Box reductions!} \\
+
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Black-Box Mechanism Design}
+
+	\begin{tabular}{m{0.45\textwidth} m{0.55\textwidth}} 
+		Someone gives us $\Algo$ that
+		\begin{itemize}
+			\item Returns feasible allocations
+					\only<1,2,3>{ \item Has some welfare guarantee}
+					\only<4,5,6>{	\item \textcolor{cyan}{Has some welfare guarantee}}
+		\end{itemize}
+	& \onslide<2,3,4,5,6>{
+		\only<2>{	We implement $\Mech(\Algo', \Pay)$ s.t.}
+		\only<3,4,5,6>{\textcolor{red}{Can we implement $\Mech(\Algo', \Pay)$ s.t \textbf{?}}}
+		\begin{itemize}	
+			\item Returns feasible allocations
+					\only<2,3,4>{
+			\item Have comparable welfare to $\Algo$
+			}
+\only<5,6>{\item \textcolor{violet}{Have comparable welfare to $\Algo$}
+					}
+					\only<2,3,4,5> {			\item Is incentive compatible (DSIC/BIC...)
+					}
+					\only<6>{			\item \textcolor{brown}{Is incentive compatible (DSIC/BIC...)}
+					}
+		\end{itemize}
+		}
+	\end{tabular}	
+	
+	%\textbf{Given}: Algorithm $\Algo$ returns feasible allocation $s$ to maximize social welfare $\sum_i v_i(s)$ \\
+
+%	\textbf{Goal}: Turn $\Algo$ into mechanism $\Mech$ where agents are truthful. \\
+%	$\rightarrow$ find $\Algo'$ and $\Pay$ s.t. $\Mech$ is truthful:
+%	everyone satisfied by reporting their true value
+\onslide<4,5,6>{
+		\mbox{}\\
+Many different flavours to the problem:		
+		\begin{enumerate}
+\onslide<4,5,6>{		\item \textcolor{cyan}{Worst Case performance \textbf{vs} Average Performance
+				when $v_i \sim \Dist$} 
+				}
+				\onslide<5,6>{ 	
+					\item \textcolor{violet}{Achieving $\Algo$'s welfare exactly \textbf{vs} approximately}
+				}
+			\onslide<6>{
+			\item \textcolor{brown}{Truthfulness: DSIC \textbf{vs} BIC (\emph{Bayesian
+					Incentive Compatible} $\rightarrow $ truthful in
+					expectation over other agents reports)} 
+
+			}
+		\end{enumerate}
+
+}
+
+\end{frame}
+
+
+\section{Previous and New Results}
+
+\begin{frame}
+	\frametitle{Previous Results}
+
+	Can we find such a reduction from mechanism design to algorithm design? \\
+	Flavours of the problem studied:\\
+	\mbox{}\\
+
+%	\begin{center}
+%		Objective: \emph{Maximize Welfare}
+%	\end{center}
+
+	\begin{adjustbox}{center}
+		\begin{tabular}{m{0.3\textwidth} m{0.8\textwidth}}
+				           &   \mybullet Prior-Free Settings\\
+
+%%%%%%%%%NEW LINE OF TABULAR %%%%%%%%%%%
+			\ldelim\{{1}{2mm}[\parbox{32mm}{preserve \textbf{worst\\ case} approx.}] 
+				 & 
+			 \parbox{90mm}{ \sp \mybullet   Cannot find reduction to get \textbf{DSIC} Mechanism \\\spitem
+					 even for single parameter\\\spitem 
+	 				{\footnotesize \textcolor{\refscolorz}{[Chawla et al 2012]}}}\\
+
+%%%%%%%%%NEW LINE OF TABULAR %%%%%%%%%%%
+				 	& \\	
+%%%%%%%%%NEW LINE OF TABULAR %%%%%%%%%%%
+
+					& \mybullet  Bayesian Settings ($v_i \sim \Dist$)\\
+%%%%%%%%%NEW LINE OF TABULAR %%%%%%%%%%%
+			\ldelim\{{6}{100mm}[\parbox{30mm}{preserve \textbf{expected\\ welfare} within  $\varepsilon$} ]
+					&
+			\parbox{90mm}{ \sp \mybullet Can find \textbf{BIC} Mechanism, \textbf{single}-parameter\\ 
+						    \spitem {\footnotesize \textcolor{\refscolorz}{[Hartline, Lucier 2010]}}}\\
+
+%%%%%%%%%NEW LINE OF TABULAR %%%%%%%%%%%
+				 	& \\	
+%%%%%%%%%NEW LINE OF TABULAR %%%%%%%%%%%
+				& \parbox{90mm}{ \sp \mybullet  Can find \textbf{$\epsilon$-BIC} Mechanism, \textbf{multi}-parameter\\
+				\spitem {\footnotesize \textcolor{\refscolorz}{[Hartline et al 2011 and Bei, Huang 2011]}}}\\
+
+%%%%%%%%%NEW LINE OF TABULAR %%%%%%%%%%%
+				 	& \\	
+%%%%%%%%%NEW LINE OF TABULAR %%%%%%%%%%%
+				& \parbox{90mm}{  \sp \mybullet Can find \textbf{BIC} Mechanism, \textbf{multi}-parameter\\
+				\spitem {\footnotesize \textcolor{\refscolorz}{[Dughmi et al 2017] }}}\\
+	\end{tabular}
+	\end{adjustbox}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{What's left to do?}
+	\begin{itemize}
+		\item The picture so far
+
+	\begin{itemize}
+		\item \textcolor{red}{\xmark} DSIC reduction, worst-case performance, single-parameter
+		\item \textcolor{green}{\checkmark} BIC reduction, expected performance, multi-parameter 
+	\end{itemize}
+
+	\pause
+		\item Some questions still remain:
+			\begin{enumerate}
+				\item \emph{\textcolor{teal}{Can we find a ``stronger than BIC`` reduction that preserves
+							expected welfare, even for single-parameter agents?}}
+							\pause
+				\item	Previous BIC results: runtime is polynomial in typespace* size.  \\
+					$\rightarrow$ example: 
+%					Poly-time is bad: e.g single
+					additive agent, with independent values over each item,
+					typespace is exponential.  \\
+					\mbox{}\\
+					
+					\emph{\textcolor{teal}{Can we avoid runtime dependence on typespace?\\
+					$\rightarrow$ get a BIC reduction that runs in time poly($n$,$m$)?}}\\
+					
+					  \mbox{}\\
+
+
+			\end{enumerate}
+
+
+			{\footnotesize \textcolor{gray}{*Typespace: \\
+							discrete: possible different input profiles\\
+							continuous: support size of $\Dist$} }\\
+	\end{itemize}
+ \end{frame}
+
+\begin{frame}
+	\frametitle{Main Results (Informal)}
+
+%Two results: \\
+%Progress towards answering previous questions:\\
+\mbox{}\\
+	\begin{itemize}\setlength\itemsep{1em}
+		\item 
+				\textcolor{red}{\xmark} No BIC reduction, even for single
+				additive agent over independent items, with subexponential
+				query complexity
+		\item	 	 	
+			\only<1>{\textcolor{red}{\xmark} No MIDR reduction even for single
+					parameter settings, with subexponential query complexity\\
+				}
+				\only<2>{\textcolor{red}{\xmark} \textbf{No MIDR reduction even
+						for single parameter settings, with subexponential
+				query complexity}\\
+			}
+				\textcolor{gray}{{\small $\rightarrow$ MIDR $\subseteq$ DSIC $\subseteq $ BIC}}
+
+	\end{itemize}
+
+		\mbox{}\\
+			\begin{center}
+			\large{
+				*\textcolor{red}{\xmark} =  \textbf{$\Mech$ degrades
+				welfare by a polynomial factor} 
+			} with subexponential queries to $\Algo$
+ 		\end{center}
+		\onslide<2>{
+		Up next: intuition for second result.}
+\end{frame}
+
+
+
+
+\section{Lower Bound Construction }
+\begin{frame}
+	\frametitle{Lower Bound for MIDR transformations}
+	\begin{itemize}
+		\item Objective: maximize welfare
+		\item Single-parameter setting with $n$ agents
+		\item For every agent: $v_i \in \{0,1\}$, outcome $\in \{0,1\}$
+	\end{itemize}
+	\mbox{} \\ 
+	\begin{definition}[MIDR]
+ $\Algo$ is MIDR if for every $\v,\v'$ :
+  $
+  \E_{\Algo(\bm{v})}[ \v \cdot \Algo(\v)] \ge \E_{\Algo(\bm{v'})} [\v \cdot \Algo(\v')]
+   $ 
+   \end{definition}
+   Essentially: $\Algo(\bm{v})$ is best outcome for $\bm{v}$ in $\Algo$'s range.
+	\pause
+	
+	\mbox{}\\
+  
+	\setcounter{theorem}{0}
+		\begin{theorem}\label{thm:MIDR_formal}
+	 For any MIDR black-box transformation $\Mech$ with sub exponential query complexity
+	  there exists an algorithm $\Algo$ and
+	  distribution $\Dist$ such that $\Wel(\Mech_{\Algo}) \le \frac{ \Wel(\Algo) }{\text{poly}(n)}$. 
+	\end{theorem}
+	
+	\mbox{}\\
+
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Construction Details}
+	
+	Construction:  family of algorithms $\Algo_{ST}$, distribution $\Dist$ such
+	that $\Mech$ degrades welfare\\
+	\mbox{}\\
+	\begin{itemize}
+	\setlength\itemsep{1em}
+		\item Input distribution $\Dist$: $x_i=1$ w.p. $1/\O(\sqrt{n})$,
+		\item Uniformly random hidden sets $S,T$ of size $\sim O(\sqrt{n})$\\
+				with ``big enough`` intersection $|S\cap T|$
+		\item Algorithm $\Algo_{ST}(x) = x \text{ or } 0$ depending on $x$\\
+				Serve everyone with value $1$ \textbf{or} serve no one.\\
+				Example:\\
+
+				$\Algo_{S,T}(x) = x:\ 0010101 \rightarrow 0010101$ \textcolor{green}{\checkmark}
+				$\Algo_{S,T}(x) = 0:\ 00\bm{1}0101 \rightarrow 00\bm{0}0000$ \textcolor{red}{\xmark}
+
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+		\frametitle{Illustration of Allocation}
+
+		\begin{itemize}
+				\item If $x$ is too large then $\Algo_{ST}(x)=\emptyset$
+				\item If $x$ is not too large and has no intersection with $S$ and $T$, then $A_{ST}(x)=x$
+		\end{itemize}
+
+		\begin{figure}[!h]
+			\centering
+%			\resizebox{10cm}{5cm}{
+		\input{cases_a_b.tex}
+%			}
+		\end{figure}
+
+\end{frame}
+
+\begin{frame}
+		\frametitle{Illustration of Allocation}
+If $x$ is not too large then:
+		\begin{itemize}
+				\item If  $|x\cap T|$ is large, and $|x\cap S|$ is small
+						then $\Algo_{ST}(x)=\emptyset$
+				\item else $\Algo_{ST}(x) = x$
+		\end{itemize}
+
+		\begin{figure}[!h]
+			\centering
+%			\resizebox{10cm}{5cm}{
+		\input{case_c_d.tex}
+%			}
+		\end{figure}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Lower Bound - Proof Idea}
+  \begin{restatable}{lem}{welf_LB1}
+	  \label{lem:welf_LB1}
+	  $\Algo$ has high expected welfare ($\Omega(\sqrt{n})$) 
+	\end{restatable}
+	\onslide<2>{
+	\begin{proofid}
+			$\Algo_{ST}(x) = x$ almost always, result follows from concentration
+			using construction of $S$, $T$ and $\Dist$
+	\end{proofid}
+}
+  \begin{restatable}{lem}{welfUB}
+  \label{lem:welf_UB1}
+  $\Mech$ has polynomially lower welfare  than $\Algo$ ($O(n^{1/4})$)	
+	\end{restatable}
+	
+	\mbox{}\\
+	Lemma \ref{lem:welf_LB1} + Lemma \ref{lem:welf_UB1} $\rightarrow$ Theorem \ref{thm:MIDR_formal} 
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Lower Bound - Proof Idea}
+  \welfUB*
+	
+  \begin{proofid}\renewcommand{\qedsymbol}{}
+		Prove in 3 steps:
+		\begin{tabular}{m{5cm} m{6cm}}
+			\begin{enumerate}
+				\item $\Algo_{ST}(T) = 0$, and $\Mech$ cannot find set S with
+						subexponentially many samples, so it \textbf{cannot find an
+						output with high welfare for $T$}.
+
+				% \item  $\Mech_\Algo(T)$ gives low welfare \textbf{Idea}:
+				% 		$\Algo_{ST}(T)=0$, $\Mech$ cannot find set	$S$ to
+				% 		return something large 
+			\end{enumerate}
+		& 
+			\begin{center}
+				\begin{minipage}{.3\textwidth}
+				 	\resizebox{4cm}{3cm}{
+						\input{case_c.tex}
+					}
+				\end{minipage}
+			\end{center}
+		\end{tabular}
+	\end{proofid}
+	Note: we don't use any truthfulness constraint here
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Lower Bound - Proof Idea}
+	\welfUB*
+	
+	\begin{proofid}
+		\begin{tabular}{m{4.8cm} m{4.5cm}} 
+			\begin{enumerate}[2.]
+				\item \textbf{Idea}:	Because of MIDR, $\Mech_{\Algo}(S)$
+						can't return an outcome with high welfare for $T$.
+						%t allocate many items in $S \cap T$. 
+						However, on input $S$, we cannot find $T$ $\rightarrow$
+						must reduce welfare throughout.
+			\end{enumerate}
+			& 	
+			\begin{center}
+				\begin{minipage}{.3\textwidth}
+				 	\resizebox{3.5cm}{2.5cm}{
+						\input{case_d.tex}
+					}
+				\end{minipage}
+			\end{center}\\
+\pause
+			\begin{enumerate}[3.]
+				\item $\Mech_\Algo(x)$ gives low welfare (for any input $x$)
+		 			\textbf{Idea}: Cannot decide if $x$ is the set $S$ or not
+			\end{enumerate}
+			&
+			\begin{center}
+				\begin{minipage}{.3\textwidth}
+				 	\resizebox{5.5cm}{2.5cm}{
+						\input{case_b.tex}
+						\input{case_d.tex}
+					}
+				\end{minipage}
+			\end{center}
+	
+		\end{tabular}
+
+%	$\Rightarrow$ \textbf{Always} give low welfare!
+\end{proofid}
+\end{frame}
+
+
+ \begin{frame}
+ \frametitle{Second Result}
+
+ \begin{itemize}
+		\item Objective: maximize $\Wel$
+		\item Single additive agent, $n$ items
+%		\item Type space $\Domain = \{0,1, \alpha\}^n$
+%		\item Outcome space $\Range = \{0,1\}^n$
+	\end{itemize}
+
+		\begin{theorem}\label{thm:BIC_formal}
+			For any DSIC black-box transformation $\Mech$ with sub exponential query
+			complexity, there exists an algorithm $\Algo$ and distribution $\Dist$ such
+			that $\Wel(\Mech_{\Algo}) \le \frac{ \Wel(\Algo) }{\text{poly}(n)}$
+	\end{theorem}
+	\mbox{}\\
+	Note: for single agent, DSIC = BIC $\Rightarrow$ same result for BIC\\
+	\mbox{}\\ 
+
+	Proof follows similarly to MIDR reduction, \textbf{but}
+	\begin{itemize}
+%		\item Change type space to $\Domain =\{0,1,\alpha\}^n$ 
+		\item Instead of MIDR condition, uses a characterization of BIC allocation rules due to 
+%		\item Use characterization of allocation rules by
+				{\footnotesize
+				\textcolor{\refscolorz}{[Hartline, Kleinberg, Malekian 2011]}}
+	\end{itemize}
+		
+ \end{frame}
+
+\section{Conclusion - Open Problems}
+\begin{frame}
+	\frametitle{Conclusion and Open Problems}
+
+	Black-box reductions: \\
+	\begin{center}
+			reducing mechanism design to algorithm design.
+	\end{center}
+
+ 	Existing black-box reductions are for BIC mechanisms, and have polynomial dependence on typespace\\
+
+	%Black-box reductions not possible without priors\\
+%	Black-Box reductions with priors require \emph{BIC} + \emph{Polynomial dependence on typespace}\\
+	\mbox{}\\
+	We showed two negative results
+	\mbox{}\\
+
+	\begin{itemize}
+	\setlength\itemsep{1em}	
+	\item Remove polynomial dependence on typespace \\
+					\textcolor{red}{\xmark} Even for single additive agent over independent types
+
+		\item Change BIC requirement $\rightarrow$ strengthen BIC to MIDR\\
+			\textcolor{red}{\xmark} Even for single parameter settings
+		\end{itemize}
+	\mbox{}\\
+	\onslide<2,3>{
+	\textbf{Open problem}: Can we strengthen BIC to DSIC, while preserving
+	expected welfare? {\footnotesize \textcolor{\refscolorz}{[Chawla et al
+	2012]}}
+	}
+		\mbox{}\\
+	\pause
+	\onslide<3>{
+		\begin{center}
+		{\large 	\textbf{Thank you!} }
+	\end{center}
+	}
+\end{frame}
+
+
+\end{document}
