@@ -1711,7 +1711,7 @@ input, select, textarea {
 
 	.container {
 		margin: 0 auto;
-		max-width: calc(100% - 4.5em);
+		max-width: calc(100% - 13em);
 		width: 50em;
 	}
 
